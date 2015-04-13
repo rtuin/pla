@@ -24,7 +24,6 @@ import yaml
 import os
 import click
 import subprocess
-from runners import TargetRunner
 
 plafile = 'Plafile.yml'
 
@@ -54,6 +53,35 @@ def pla(context, target):
 
     if runResult:
         context.exit(1);
+
+class TargetRunner:
+    def __init__(self, plafile):
+        self.plafile = plafile
+
+    def run(self, target, error=False):
+        for command in self.plafile[target]:
+            if command[:1] == '=':
+                error = self.run(command[1:], error)
+                continue
+
+            if error:
+                click.secho('    . ' + command, fg='white', dim=True)
+                continue
+
+            try:
+                subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+
+                click.secho('    ' + u'\u2714'.encode('utf8') + ' ' + command, fg='green')
+            except subprocess.CalledProcessError as caught:
+                click.secho('    '+ u'\u2718'.encode('utf8') + ' ' + command + ':', fg='red')
+
+                output = caught.output.splitlines()
+                if output == []:
+                    output = ['[no output]']
+
+                click.secho('        ' + ('\n        '.join(output)), fg='red', dim=True)
+                error = True
+        return error
 
 if __name__ == '__main__':
     pla()
