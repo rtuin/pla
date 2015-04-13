@@ -20,40 +20,31 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import yaml
-import os
 import click
 import subprocess
-from runners import TargetRunner
 
-plafile = 'Plafile.yml'
+class TargetRunner:
+    def __init__(self, plafile):
+        self.plafile = plafile
 
-@click.command()
-@click.argument('target', default='all')
-@click.pass_context
-def pla(context, target):
-    click.echo(click.style('Pla 0.1 by Richard Tuin - Make, but with a yaml file'));
-    """Pla 0.1 by Richard Tuin - Make, but with a yaml file"""
+    def run(self, target):
+        error = False
+        for command in self.plafile[target]:
+            if error:
+                click.secho('    . ' + command, fg='white')
+                continue
 
-    if not os.path.exists(plafile):
-        raise click.UsageError('Pla could not find a Plafile.yml in ' + os.getcwd())
+            try:
+                subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
 
-    stream = open(plafile, 'r')
-    plaData = yaml.load(stream)
+                click.secho('    ' + u'\u2714'.encode('utf8') + ' ' + command, fg='green')
+            except subprocess.CalledProcessError as caught:
+                click.secho('    '+ u'\u2718'.encode('utf8') + ' ' + command + ':', fg='red')
 
-    if not isinstance(plaData, dict):
-        raise click.UsageError('Plafile.yml does not contain any targets')
+                output = caught.output.splitlines()
+                if output == []:
+                    output = ['[no output]']
 
-    if not target in plaData:
-        raise click.UsageError('Target "' + target + '" not present in ' + plafile)
-
-    click.echo('\nRunning target "' + target + '":')
-
-    targetRunner = TargetRunner(plaData)
-    runResult = targetRunner.run(target)
-
-    if runResult:
-        context.exit(1);
-
-if __name__ == '__main__':
-    pla()
+                click.secho('        ' + ('\n        '.join(output)), fg='red')
+                error = True
+        return error
