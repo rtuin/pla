@@ -27,11 +27,14 @@ class TargetRunner:
     def __init__(self, plafile):
         self.plafile = plafile
 
-    def run(self, target):
-        error = False
+    def run(self, target, error=False):
         for command in self.plafile[target]:
+            if command[:1] == '=':
+                error = self.run(command[1:], error)
+                continue
+
             if error:
-                click.secho('    . ' + command, fg='white')
+                click.secho('    . ' + command, fg='white', dim=True)
                 continue
 
             try:
@@ -45,6 +48,6 @@ class TargetRunner:
                 if output == []:
                     output = ['[no output]']
 
-                click.secho('        ' + ('\n        '.join(output)), fg='red')
+                click.secho('        ' + ('\n        '.join(output)), fg='red', dim=True)
                 error = True
         return error

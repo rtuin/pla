@@ -43,6 +43,32 @@ $ pla dev
 
 Pla will then run the shell commands you specified in the Plafile.
 
+## Linking targets
+
+As of Pla v0.2 it is also possible to let your targets call each other. This is simply done by refering to the target 
+prepended with an `=` sign. Like so:
+
+```yaml
+# Plafile.yml
+dev:
+  - docker-compose up -d
+  - pstorm .
+  - open http://local.project.url/
+
+prepenv:
+  - git submodule update --init --recursive
+  - composer install
+
+pr:
+  - git pr 123
+  - =prepenv
+  - grunt build
+```
+
+## Changelog
+
+All notable changes are documented in the [changelog file](CHANGELOG.md).
+
 ## Credits
 
 - [Richard Tuin](https://github.com/rtuin)
