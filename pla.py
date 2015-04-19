@@ -31,8 +31,8 @@ plafile = 'Plafile.yml'
 @click.argument('target', default='all')
 @click.pass_context
 def pla(context, target):
-    click.echo(click.style('Pla 0.2.1 by Richard Tuin - Make, but with a yaml file'));
-    """Pla 0.2.1 by Richard Tuin - Make, but with a yaml file"""
+    click.echo(click.style('Pla 0.2.2 by Richard Tuin - Make, but with a yaml file'));
+    """Pla 0.2.2 by Richard Tuin - Make, but with a yaml file"""
 
     if not os.path.exists(plafile):
         raise click.UsageError('Pla could not find a Plafile.yml in ' + os.getcwd())
@@ -44,7 +44,9 @@ def pla(context, target):
         raise click.UsageError('Plafile.yml does not contain any targets')
 
     if not target in plaData:
-        raise click.UsageError('Target "' + target + '" not present in ' + plafile)
+        raise click.BadParameter(
+            'Target "' + target + '" not present in ' + plafile + '. \nValid targets are: ' + '\n    ' +
+            ('\n    '.join(plaData.keys())))
 
     click.echo('\nRunning target "' + target + '":')
 

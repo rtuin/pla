@@ -24,7 +24,7 @@ from setuptools import setup
 
 setup(
     name='pla',
-    version='0.2.1',
+    version='0.2.2',
     description='Make, but with a yaml file',
     author='Richard Tuin',
     author_email='richard@newnative.nl',
