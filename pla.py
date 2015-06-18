@@ -43,14 +43,24 @@ def pla(context, target):
     if not isinstance(plaData, dict):
         raise click.UsageError('Plafile.yml does not contain any targets')
 
+    plaTargets = {}
+    for targetDef in plaData:
+        targetLength = targetDef.find('[')
+        targetName = targetDef
+        targetArguments = []
+        if targetLength > 0:
+            targetArguments = targetName[targetLength+1:-1].split(',')
+            targetName = targetName[:targetLength]
+        plaTargets[targetName] = {'arguments': targetArguments, 'commands': plaData[targetDef]}
+
     if not target in plaData:
         raise click.BadParameter(
             'Target "' + target + '" not present in ' + plafile + '. \nValid targets are: ' + '\n    ' +
-            ('\n    '.join(plaData.keys())))
+            ('\n    '.join(plaTargets.keys())))
 
     click.echo('\nRunning target "' + target + '":')
 
-    targetRunner = TargetRunner(plaData)
+    targetRunner = TargetRunner(plaTargets)
     runResult = targetRunner.run(target)
 
     if runResult:
