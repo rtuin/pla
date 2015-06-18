@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.3 - 18-06-2015
+- Bugfix: Yaml is missing in dependency list
+
 ## 0.2.2 - 19-04-2015
 - Enhancement: Calling a nonexistent target now shows a list with existing ones
 
