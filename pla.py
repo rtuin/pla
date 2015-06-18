@@ -31,8 +31,8 @@ plafile = 'Plafile.yml'
 @click.argument('target', default='all')
 @click.pass_context
 def pla(context, target):
-    click.echo(click.style('Pla 0.2.3 by Richard Tuin - Make, but with a yaml file'));
-    """Pla 0.2.3 by Richard Tuin - Make, but with a yaml file"""
+    click.echo(click.style('Pla 0.2.4 by Richard Tuin - Make, but with a yaml file'));
+    """Pla 0.2.4 by Richard Tuin - Make, but with a yaml file"""
 
     if not os.path.exists(plafile):
         raise click.UsageError('Pla could not find a Plafile.yml in ' + os.getcwd())
