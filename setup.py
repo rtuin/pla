@@ -24,7 +24,7 @@ from setuptools import setup
 
 setup(
     name='pla',
-    version='0.2.2',
+    version='0.2.4',
     description='Make, but with a yaml file',
     author='Richard Tuin',
     author_email='richard@newnative.nl',
@@ -32,6 +32,7 @@ setup(
     py_modules=['pla'],
     install_requires=[
         'Click',
+        'pyyaml'
     ],
     entry_points='''
         [console_scripts]
