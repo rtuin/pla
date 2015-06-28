@@ -24,6 +24,7 @@ import yaml
 import os
 import click
 import subprocess
+
 from .version import __version__
 
 plafile = 'Plafile.yml'

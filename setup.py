@@ -21,7 +21,8 @@
 # THE SOFTWARE.
 
 from setuptools import setup
-from pla import __version__
+
+exec(open('pla/version.py').read())
 
 setup(
     name='pla',
@@ -32,13 +33,13 @@ setup(
     url='http://rtuin.github.io/pla/',
     license='MIT',
     py_modules=['pla'],
-    package_dir={'':'pla'},
     install_requires=[
         'Click',
         'pyyaml'
     ],
-    entry_points='''
-        [console_scripts]
-        pla=pla:pla
-    ''',
+    entry_points={
+        'console_scripts': [
+            'pla=pla.__init__:pla'
+        ]
+    },
 )
