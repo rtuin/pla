@@ -63,7 +63,7 @@ updatecode:
 
 ## Target parameters
 
-Pla v0.3 gives you the ability to variables in target commands. This feature is called Target parameters.
+Pla v0.3 gives you the ability to variables in target commands. This feature is called target parameters.
  
 Simply define the parameters in the target definition, and put them in your command. Enclosing the parameters name with 
 `%` signs. For example:
@@ -74,6 +74,9 @@ pr[number]:
   - git pr %number%
   - git pull upstream master
 ```
+
+  **Disclaimer** The current implementation of target parameters is built to work only when you directly call the
+  parametrized target.
 
 ## Changelog
 
