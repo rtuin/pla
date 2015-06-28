@@ -29,8 +29,10 @@ setup(
     description='Coder\'s simplest workflow automation tool.',
     author='Richard Tuin',
     author_email='richard@newnative.nl',
+    url='http://rtuin.github.io/pla/',
     license='MIT',
     py_modules=['pla'],
+    package_dir={'':'pla'},
     install_requires=[
         'Click',
         'pyyaml'
