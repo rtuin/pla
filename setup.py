@@ -33,6 +33,7 @@ setup(
     url='http://rtuin.github.io/pla/',
     license='MIT',
     py_modules=['pla'],
+    include_package_data=True,
     install_requires=[
         'Click',
         'pyyaml'
