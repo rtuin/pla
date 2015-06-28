@@ -26,7 +26,7 @@ from pla.version import __version__
 setup(
     name='pla',
     version=__version__,
-    description='Make, but with a yaml file',
+    description='Coder\'s simplest workflow automation tool.',
     author='Richard Tuin',
     author_email='richard@newnative.nl',
     license='MIT',

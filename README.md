@@ -1,6 +1,6 @@
 # Pla
 
-Make, but with a yaml file
+Coder's simplest workflow automation tool.
 
 ## Install
 
