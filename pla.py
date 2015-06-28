@@ -27,11 +27,12 @@ import subprocess
 
 plafile = 'Plafile.yml'
 
-@click.command()
+@click.command(context_settings=dict(ignore_unknown_options=True, allow_extra_args=True))
 @click.argument('target', default='all')
 @click.pass_context
 def pla(context, target):
-    click.echo(click.style('Pla 0.2.4 by Richard Tuin - Make, but with a yaml file'));
+
+    click.echo(click.style('Pla 0.2.4 by Richard Tuin - Make, but with a yaml file'))
     """Pla 0.2.4 by Richard Tuin - Make, but with a yaml file"""
 
     if not os.path.exists(plafile):
@@ -53,7 +54,7 @@ def pla(context, target):
             targetName = targetName[:targetLength]
         plaTargets[targetName] = {'arguments': targetArguments, 'commands': plaData[targetDef]}
 
-    if not target in plaData:
+    if not target in plaTargets:
         raise click.BadParameter(
             'Target "' + target + '" not present in ' + plafile + '. \nValid targets are: ' + '\n    ' +
             ('\n    '.join(plaTargets.keys())))
@@ -61,19 +62,37 @@ def pla(context, target):
     click.echo('\nRunning target "' + target + '":')
 
     targetRunner = TargetRunner(plaTargets)
-    runResult = targetRunner.run(target)
+    runResult = targetRunner.run(target, context.args)
 
     if runResult:
-        context.exit(1);
+        context.exit(1)
 
 class TargetRunner:
     def __init__(self, plafile):
         self.plafile = plafile
 
-    def run(self, target, error=False):
-        for command in self.plafile[target]:
+    def run(self, target, args, error=False):
+        """
+
+        :param target: string
+        :param args: dict
+        :param error:
+        :return:
+        """
+        targetArgs = {}
+        argNo = 0
+        if len(self.plafile[target]['arguments']) > len(args):
+            raise click.BadParameter('Not enough parameters given for target: ' + target)
+
+        for argName in self.plafile[target]['arguments']:
+            targetArgs[argName] = args[argNo]
+            argNo += 1
+        for command in self.plafile[target]['commands']:
+            for argName, argValue in targetArgs.iteritems():
+                command = command.replace("%" + argName + "%", argValue)
+
             if command[:1] == '=':
-                error = self.run(command[1:], error)
+                error = self.run(command[1:], args, error)
                 continue
 
             if error:
@@ -88,7 +107,7 @@ class TargetRunner:
                 click.secho('    '+ u'\u2718'.encode('utf8') + ' ' + command + ':', fg='red')
 
                 output = caught.output.splitlines()
-                if output == []:
+                if output:
                     output = ['[no output]']
 
                 click.secho('        ' + ('\n        '.join(output)), fg='red', dim=True)

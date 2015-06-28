@@ -36,7 +36,7 @@ dev:
   - open http://local.project.url/
 ```
 
-Then simply run pla from the command line:
+Then simply run Pla from the command line:
 ```bash
 $ pla dev
 ```
@@ -50,19 +50,29 @@ prepended with an `=` sign. Like so:
 
 ```yaml
 # Plafile.yml
-dev:
+up:
   - docker-compose up -d
+  - =updatecode
   - pstorm .
   - open http://local.project.url/
-
-prepenv:
+  
+updatecode:
   - git submodule update --init --recursive
   - composer install
+```
 
-pr:
-  - git pr 123
-  - =prepenv
-  - grunt build
+## Target parameters
+
+Pla v0.3 gives you the ability to variables in target commands. This feature is called Target parameters.
+ 
+Simply define the parameters in the target definition, and put them in your command. Enclosing the parameters name with 
+`%` signs. For example:
+
+```yaml
+# Plafile.yml
+pr[number]:
+  - git pr %number%
+  - git pull upstream master
 ```
 
 ## Changelog
