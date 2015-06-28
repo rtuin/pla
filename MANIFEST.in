@@ -1,1 +1,1 @@
-include pla/version.py README.md LICENSE
+include pla/* README.md LICENSE
