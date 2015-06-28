@@ -21,7 +21,7 @@
 # THE SOFTWARE.
 
 from setuptools import setup
-from pla.version import __version__
+from pla import __version__
 
 setup(
     name='pla',
