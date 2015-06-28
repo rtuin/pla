@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.2 - 28-06-2015
+- Bugfix: Had some troubles with packaging
+
 ## 0.3.0 - 28-06-2015
 - Feature: target parameters
 - Enhancement: Put the code in a package subdirectory
