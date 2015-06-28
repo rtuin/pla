@@ -1,0 +1,10 @@
+release[version]:
+  - git status -s | egrep -c "^\s?[ADMR]" | grep -q 0
+  - echo "__version__ = \"%version%\"" > pla/version.py
+  - git add pla/version.py
+  - git checkout -b release/%version%
+  - git commit -m "Tagging release v%version%"
+  - git tag %version%
+  - git push lab %version%
+  - git checkout master
+  - echo "__version__ = \"master\"" > pla/version.py

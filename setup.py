@@ -21,10 +21,11 @@
 # THE SOFTWARE.
 
 from setuptools import setup
+from pla.version import __version__
 
 setup(
     name='pla',
-    version='0.2.4',
+    version=__version__,
     description='Make, but with a yaml file',
     author='Richard Tuin',
     author_email='richard@newnative.nl',

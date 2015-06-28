@@ -75,6 +75,12 @@ pr[number]:
   - git pull upstream master
 ```
 
+You can then call the target like this:
+
+```bash
+$ pla pr 123
+```
+
   **Disclaimer** The current implementation of target parameters is built to work only when you directly call the
   parametrized target.
 

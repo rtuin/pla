@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.0 - 28-06-2015
+- Feature: target parameters
+- Enhancement: Put the code in a package subdirectory
+- Enhancement: Made scripts for the release process
+
 ## 0.2.4 - 18-06-2015
 - Bugfix: Correct release mistake
 
