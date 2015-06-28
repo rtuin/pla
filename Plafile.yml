@@ -6,5 +6,8 @@ release[version]:
   - git commit -m "Tagging release v%version%"
   - git tag %version%
   - git push origin %version%
-  - python setup.py bdist bdist_egg sdist upload
+  - =distribute
   - git checkout master
+
+distribute:
+ - python setup.py bdist bdist_egg sdist upload
