@@ -20,9 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import os
 from setuptools import setup
 
-exec(open('pla/version.py').read())
+exec(open(os.path.join(os.path.dirname(__file__), 'pla/version.py')).read())
 
 setup(
     name='pla',
