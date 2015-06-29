@@ -4,15 +4,33 @@ Coder's simplest workflow automation tool.
 
 ## Install
 
-Use the pip installer to install Pla
+Use the pip installer to install Pla.
 
 ``` bash
 $ pip install pla
 ```
 
+### Upgrade an existing installation
+
+When installed with Pip you can upgrade to the latest version using:
+```shell
+$ pip install pla --upgrade
+```
+
+### Install from git
+To install Pla from git you first need to make sure Pla is uninstalled. Then you must clone the repository and install 
+the development version:
+
+```shell
+$ pip uninstall pla
+$ git clone git@github.com:rtuin/pla.git
+$ cd pla
+$ pip install -e .
+```
+
 ## Usage
 
-```bash
+```shell
 $ pla [target]
 ```
 
