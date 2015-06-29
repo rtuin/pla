@@ -10,4 +10,6 @@ release[version]:
   - git checkout master
 
 distribute:
- - python setup.py bdist bdist_egg sdist upload
+ - rm -rf dist/
+ - python setup.py sdist bdist_wheel
+ - twine upload dist/*
