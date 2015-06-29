@@ -1,6 +1,8 @@
 # Pla
 
-Coder's simplest workflow automation tool.
+Pla helps you automate workflows in a very simple way. Much like make, but with a yaml file structure.
+
+It's a coder's simplest workflow automation tool.
 
 ## Install
 
