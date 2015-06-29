@@ -20,10 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import os
-from setuptools import setup
+from distutils.core import setup
+from setuptools import find_packages
 
-exec(open(os.path.join(os.path.dirname(__file__), 'pla/version.py')).read())
+exec(open('pla/version.py').read())
 
 setup(
     name='pla',
@@ -33,15 +33,14 @@ setup(
     author_email='richard@newnative.nl',
     url='http://rtuin.github.io/pla/',
     license='MIT',
-    py_modules=['pla'],
-    include_package_data=True,
+    packages=find_packages(),
     install_requires=[
         'Click',
         'pyyaml'
     ],
     entry_points={
         'console_scripts': [
-            'pla=pla.__init__:pla'
+            'pla=pla:main'
         ]
     },
 )
