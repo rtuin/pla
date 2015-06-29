@@ -43,9 +43,11 @@ $ pla dev
 
 Pla will then run the shell commands you specified in the Plafile.
 
-## Linking targets
+## Features
 
-As of Pla v0.2 it is also possible to let your targets call each other. This is simply done by refering to the target 
+### Linking targets
+
+As of Pla v0.2 it is possible to let your targets call each other. This is simply done by refering to the target 
 prepended with an `=` sign. Like so:
 
 ```yaml
@@ -61,7 +63,7 @@ updatecode:
   - composer install
 ```
 
-## Target parameters
+### Target parameters
 
 Pla v0.3 gives you the ability to variables in target commands. This feature is called target parameters.
  
@@ -83,6 +85,39 @@ $ pla pr 123
 
   **Disclaimer** The current implementation of target parameters is built to work only when you directly call the
   parametrized target.
+  
+### Command OS filter
+
+When you run the same Pla target on multiple operating systems you might want to specify which command to execute on what OS.
+You can do this by prefixing your command with a filter that indicates the OS's family name.
+ 
+```yaml
+# Plafile
+os:
+  - (darwin) echo "Mac OS"
+  - (redhat) echo "RedHat family"
+  - (ubuntu|darwin) echo "Ubuntu or Mac OS"
+  - (debian) echo "Debian"
+```
+
+If you run `pla os` on a Mac, you'll get the following output:
+```
+Running target "os":
+    ✔ (darwin) echo "Mac OS"
+    . (redhat) echo "RedHat family"
+    ✔ (ubuntu|darwin) echo "Ubuntu or Mac OS"
+    . (debian) echo "Debian"
+```
+
+**Operating systems matches**
+
+| System/Family | Match   |
+|---------------|---------|
+| Linux         | linux   |
+| Ubuntu        | ubuntu  |
+| Red Hat       | redhat  |
+| Mac OS        | darwin  |
+| Windows       | windows |
 
 ## Changelog
 
