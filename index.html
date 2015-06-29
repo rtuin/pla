@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Pla by Richard Tuin</title>
+    <title>Pla by rtuin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -12,7 +12,7 @@
   <body>
     <section class="page-header">
       <h1 class="project-name">Pla</h1>
-      <h2 class="project-tagline">Simplest workflow automation tool.</h2>
+      <h2 class="project-tagline">Coder&#39;s simplest workflow automation tool.</h2>
       <a href="https://github.com/rtuin/pla" class="btn">View on GitHub</a>
       <a href="https://github.com/rtuin/pla/zipball/master" class="btn">Download .zip</a>
       <a href="https://github.com/rtuin/pla/tarball/master" class="btn">Download .tar.gz</a>
@@ -24,14 +24,26 @@
 
 <p>Pla helps you automate workflows in a very simple way. Much like make, but with a yaml file structure.</p>
 
-<h2>
-<a id="start-working-with-pla" class="anchor" href="#start-working-with-pla" aria-hidden="true"><span class="octicon octicon-link"></span></a>Start working with Pla</h2>
+<p>It's a coder's simplest workflow automation tool.</p>
 
-<p>Use the pip installer to install Pla:</p>
+<h2>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h2>
+
+<p>Use the pip installer to install Pla</p>
 
 <div class="highlight highlight-bash"><pre>$ pip install pla</pre></div>
 
-<p>With Pla you define the targets in a Yaml file called <code>Plafile.yml</code>
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<div class="highlight highlight-bash"><pre>$ pla [target]</pre></div>
+
+<p>If you do not provide a target, the default target called <code>all</code> will run.</p>
+
+<h2>
+<a id="start-working-with-pla" class="anchor" href="#start-working-with-pla" aria-hidden="true"><span class="octicon octicon-link"></span></a>Start working with Pla</h2>
+
+<p>Pla works similar to <a href="https://www.gnu.org/software/make/">Make</a>. You define the targets in a Yaml file called <code>Plafile.yml</code>
 and run the targets from the command line.</p>
 
 <p>Lets say we use Pla to kickstart our working day. We will make a Plafile which starts our local dev server, starts our IDE
@@ -49,35 +61,44 @@ and run the targets from the command line.</p>
 
 <div class="highlight highlight-bash"><pre>$ pla dev</pre></div>
 
-<h2>
-    <a id="linking-targets" class="anchor" href="#linking-targets" aria-hidden="true"><span class="octicon octicon-link"></span></a>Linking targets</h2>
+<p>Pla will then run the shell commands you specified in the Plafile.</p>
 
-<p>As of Pla v0.2.1 it is also possible to let your targets call each other. This is simply done by refering to the target
-    prepended with an <code>=</code> sign. Like so:</p>
+<h2>
+<a id="linking-targets" class="anchor" href="#linking-targets" aria-hidden="true"><span class="octicon octicon-link"></span></a>Linking targets</h2>
+
+<p>As of Pla v0.2 it is also possible to let your targets call each other. This is simply done by refering to the target 
+prepended with an <code>=</code> sign. Like so:</p>
 
 <div class="highlight highlight-yaml"><pre><span class="pl-c"># Plafile.yml</span>
-<span class="pl-s"><span class="pl-ent">prepenv:</span></span>
+<span class="pl-s"><span class="pl-ent">up:</span></span>
+  <span class="pl-s">- <span class="pl-s">docker-compose up -d</span></span>
+  <span class="pl-s">- <span class="pl-s">=updatecode</span></span>
+  <span class="pl-s">- <span class="pl-s">pstorm .</span></span>
+  <span class="pl-s">- <span class="pl-s">open http://local.project.url/</span></span>
+
+<span class="pl-s"><span class="pl-ent">updatecode:</span></span>
   <span class="pl-s">- <span class="pl-s">git submodule update --init --recursive</span></span>
-  <span class="pl-s">- <span class="pl-s">composer install</span></span>
-
-<span class="pl-s"><span class="pl-ent">pr:</span></span>
-  <span class="pl-s">- <span class="pl-s">git pr 123</span></span>
-  <span class="pl-s">- <span class="pl-s">=prepenv</span></span>
-  <span class="pl-s">- <span class="pl-s">grunt build</span></span></pre></div>
+  <span class="pl-s">- <span class="pl-s">composer install</span></span></pre></div>
 
 <h2>
-<a id="how-to-install-pla" class="anchor" href="#how-to-install-pla" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to install Pla</h2>
+<a id="target-parameters" class="anchor" href="#target-parameters" aria-hidden="true"><span class="octicon octicon-link"></span></a>Target parameters</h2>
 
-<p>Use the pip installer to install Pla:</p>
+<p>Pla v0.3 gives you the ability to variables in target commands. This feature is called target parameters.</p>
 
-<div class="highlight highlight-bash"><pre>$ pip install pla</pre></div>
+<p>Simply define the parameters in the target definition, and put them in your command. Enclosing the parameters name with 
+<code>%</code> signs. For example:</p>
 
-<h2>
-<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+<div class="highlight highlight-yaml"><pre><span class="pl-c"># Plafile.yml</span>
+<span class="pl-s"><span class="pl-ent">pr[number]:</span></span>
+  <span class="pl-s">- <span class="pl-s">git pr %number%</span></span>
+  <span class="pl-s">- <span class="pl-s">git pull upstream master</span></span></pre></div>
 
-<div class="highlight highlight-bash"><pre>$ pla [target]</pre></div>
+<p>You can then call the target like this:</p>
 
-<p>If you do not provide a target, the default target called <code>all</code> will run.</p>
+<div class="highlight highlight-bash"><pre>$ pla pr 123</pre></div>
+
+<p><strong>Disclaimer</strong> The current implementation of target parameters is built to work only when you directly call the
+  parametrized target.</p>
 
 <h2>
 <a id="credits" class="anchor" href="#credits" aria-hidden="true"><span class="octicon octicon-link"></span></a>Credits</h2>
@@ -100,6 +121,16 @@ and run the targets from the command line.</p>
 
     </section>
 
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-259721-9");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
 
   </body>
 </html>
