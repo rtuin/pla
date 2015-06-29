@@ -20,12 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import yaml
-import os
-import click
-import subprocess
+import yaml, os, click, subprocess
 
 from .version import __version__
+from .osfilter import command_for_current_os
 
 plafile = 'Plafile.yml'
 
@@ -88,7 +86,12 @@ class TargetRunner:
         for argName in self.plafile[target]['arguments']:
             targetArgs[argName] = args[argNo]
             argNo += 1
-        for command in self.plafile[target]['commands']:
+        for rawCommand in self.plafile[target]['commands']:
+            command = command_for_current_os(rawCommand)
+            if not command:
+                click.secho('    . ' + rawCommand, fg='white', dim=True)
+                continue
+
             for argName, argValue in targetArgs.iteritems():
                 command = command.replace("%" + argName + "%", argValue)
 
@@ -97,15 +100,15 @@ class TargetRunner:
                 continue
 
             if error:
-                click.secho('    . ' + command, fg='white', dim=True)
+                click.secho('    . ' + rawCommand, fg='white', dim=True)
                 continue
 
             try:
                 subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
 
-                click.secho('    ' + u'\u2714'.encode('utf8') + ' ' + command, fg='green')
+                click.secho('    ' + u'\u2714'.encode('utf8') + ' ' + rawCommand, fg='green')
             except subprocess.CalledProcessError as caught:
-                click.secho('    '+ u'\u2718'.encode('utf8') + ' ' + command + ':', fg='red')
+                click.secho('    '+ u'\u2718'.encode('utf8') + ' ' + rawCommand + ':', fg='red')
 
                 output = caught.output.splitlines()
                 if output:
