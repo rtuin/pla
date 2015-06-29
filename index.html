@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Pla by rtuin</title>
+    <title>Pla - A coder's simplest workflow automation tool by Richard Tuin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -29,14 +29,32 @@
 <h2>
 <a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h2>
 
-<p>Use the pip installer to install Pla</p>
+<p>Use the pip installer to install Pla.</p>
 
 <div class="highlight highlight-bash"><pre>$ pip install pla</pre></div>
+
+<h3>
+<a id="upgrade-an-existing-installation" class="anchor" href="#upgrade-an-existing-installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Upgrade an existing installation</h3>
+
+<p>When installed with Pip you can upgrade to the latest version using:</p>
+
+<div class="highlight highlight-shell"><pre>$ pip install pla --upgrade</pre></div>
+
+<h3>
+<a id="install-from-git" class="anchor" href="#install-from-git" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install from git</h3>
+
+<p>To install Pla from git you first need to make sure Pla is uninstalled. Then you must clone the repository and install 
+the development version:</p>
+
+<div class="highlight highlight-shell"><pre>$ pip uninstall pla
+$ git clone git@github.com:rtuin/pla.git
+$ <span class="pl-c1">cd</span> pla
+$ pip install -e <span class="pl-c1">.</span></pre></div>
 
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
 
-<div class="highlight highlight-bash"><pre>$ pla [target]</pre></div>
+<div class="highlight highlight-shell"><pre>$ pla [target]</pre></div>
 
 <p>If you do not provide a target, the default target called <code>all</code> will run.</p>
 
@@ -64,9 +82,12 @@ and run the targets from the command line.</p>
 <p>Pla will then run the shell commands you specified in the Plafile.</p>
 
 <h2>
-<a id="linking-targets" class="anchor" href="#linking-targets" aria-hidden="true"><span class="octicon octicon-link"></span></a>Linking targets</h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
 
-<p>As of Pla v0.2 it is also possible to let your targets call each other. This is simply done by refering to the target 
+<h3>
+<a id="linking-targets" class="anchor" href="#linking-targets" aria-hidden="true"><span class="octicon octicon-link"></span></a>Linking targets</h3>
+
+<p>As of Pla v0.2 it is possible to let your targets call each other. This is simply done by refering to the target 
 prepended with an <code>=</code> sign. Like so:</p>
 
 <div class="highlight highlight-yaml"><pre><span class="pl-c"># Plafile.yml</span>
@@ -80,8 +101,8 @@ prepended with an <code>=</code> sign. Like so:</p>
   <span class="pl-s">- <span class="pl-s">git submodule update --init --recursive</span></span>
   <span class="pl-s">- <span class="pl-s">composer install</span></span></pre></div>
 
-<h2>
-<a id="target-parameters" class="anchor" href="#target-parameters" aria-hidden="true"><span class="octicon octicon-link"></span></a>Target parameters</h2>
+<h3>
+<a id="target-parameters" class="anchor" href="#target-parameters" aria-hidden="true"><span class="octicon octicon-link"></span></a>Target parameters</h3>
 
 <p>Pla v0.3 gives you the ability to variables in target commands. This feature is called target parameters.</p>
 
@@ -99,6 +120,66 @@ prepended with an <code>=</code> sign. Like so:</p>
 
 <p><strong>Disclaimer</strong> The current implementation of target parameters is built to work only when you directly call the
   parametrized target.</p>
+
+<h3>
+<a id="command-os-filter" class="anchor" href="#command-os-filter" aria-hidden="true"><span class="octicon octicon-link"></span></a>Command OS filter</h3>
+
+<p>When you run the same Pla target on multiple operating systems you might want to specify which command to execute on what OS.
+You can do this by prefixing your command with a filter that indicates the OS's family name.</p>
+
+<div class="highlight highlight-yaml"><pre><span class="pl-c"># Plafile</span>
+<span class="pl-s"><span class="pl-ent">os:</span></span>
+  <span class="pl-s">- <span class="pl-s">(darwin) echo "Mac OS"</span></span>
+  <span class="pl-s">- <span class="pl-s">(redhat) echo "RedHat family"</span></span>
+  <span class="pl-s">- <span class="pl-s">(ubuntu|darwin) echo "Ubuntu or Mac OS"</span></span>
+  <span class="pl-s">- <span class="pl-s">(debian) echo "Debian"</span></span></pre></div>
+
+<p>If you run <code>pla os</code> on a Mac, you'll get the following output:</p>
+
+<pre><code>Running target "os":
+    ✔ (darwin) echo "Mac OS"
+    . (redhat) echo "RedHat family"
+    ✔ (ubuntu|darwin) echo "Ubuntu or Mac OS"
+    . (debian) echo "Debian"
+</code></pre>
+
+<p><strong>Operating systems matches</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>System/Family</th>
+<th>Match</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux</td>
+<td>linux</td>
+</tr>
+<tr>
+<td>Ubuntu</td>
+<td>ubuntu</td>
+</tr>
+<tr>
+<td>Red Hat</td>
+<td>redhat</td>
+</tr>
+<tr>
+<td>Mac OS</td>
+<td>darwin</td>
+</tr>
+<tr>
+<td>Windows</td>
+<td>windows</td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changelog</h2>
+
+<p>All notable changes are documented in the <a href="CHANGELOG.md">changelog file</a>.</p>
 
 <h2>
 <a id="credits" class="anchor" href="#credits" aria-hidden="true"><span class="octicon octicon-link"></span></a>Credits</h2>
