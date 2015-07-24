@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.1 - 24-07-2015
+- Bugfix: Output is now shown when a command fails
+
+## 0.4.0 - 10-07-2015
+- Feature: OS-specific commands
+
 ## 0.3.2 - 28-06-2015
 - Bugfix: Had some troubles with packaging
 
