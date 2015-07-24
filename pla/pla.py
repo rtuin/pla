@@ -111,7 +111,7 @@ class TargetRunner:
                 click.secho('    '+ u'\u2718'.encode('utf8') + ' ' + rawCommand + ':', fg='red')
 
                 output = caught.output.splitlines()
-                if output:
+                if len(output) == 0:
                     output = ['[no output]']
 
                 click.secho('        ' + ('\n        '.join(output)), fg='red', dim=True)
