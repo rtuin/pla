@@ -8,7 +8,7 @@ release[version]:
   - git push origin %version%
   - =distribute
   - git checkout master
-  - git branch -D feature/%version%
+  - git branch -D release/%version%
 
 distribute:
   - rm -rf dist/
