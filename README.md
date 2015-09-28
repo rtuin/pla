@@ -9,14 +9,19 @@ It's a coder's simplest workflow automation tool.
 Use the pip installer to install Pla.
 
 ``` bash
-$ pip install pla
+$ (sudo) pip install pla
+```
+
+If pip is not present on your system:
+```
+$ sudo easy_install pip
 ```
 
 ### Upgrade an existing installation
 
 When installed with Pip you can upgrade to the latest version using:
 ```shell
-$ pip install pla --upgrade
+$ (sudo) pip install pla --upgrade
 ```
 
 ### Install from git
