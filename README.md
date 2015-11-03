@@ -6,6 +6,7 @@ It's a coder's simplest workflow automation tool.
 
 ## Install
 
+Pla requires Python 2.x. 
 Use the pip installer to install Pla.
 
 ``` bash
@@ -16,6 +17,8 @@ If pip is not present on your system:
 ```
 $ sudo easy_install pip
 ```
+
+_**Note:** OS X Users reported that [Homebrew](http://brew.sh/)'s version of Python works better than the stock one._
 
 ### Upgrade an existing installation
 
