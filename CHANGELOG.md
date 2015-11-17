@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.2 - 17-11-2015
+- Feature: Show the running command
+
 ## 0.4.1 - 24-07-2015
 - Bugfix: Output is now shown when a command fails
 

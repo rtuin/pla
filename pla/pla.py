@@ -103,12 +103,16 @@ class TargetRunner:
                 click.secho('    . ' + rawCommand, fg='white', dim=True)
                 continue
 
+            raw_command = '    ' + u'\u231B'.encode('utf8') + ' ' + rawCommand
             try:
+                click.secho(raw_command, fg='white', dim=True, nl=False)
                 subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
 
+                click.secho("\b" * len(raw_command), nl=False)
                 click.secho('    ' + u'\u2714'.encode('utf8') + ' ' + rawCommand, fg='green')
             except subprocess.CalledProcessError as caught:
-                click.secho('    '+ u'\u2718'.encode('utf8') + ' ' + rawCommand + ':', fg='red')
+                click.secho("\b" * len(raw_command), nl=False)
+                click.secho('    ' + u'\u2718'.encode('utf8') + ' ' + rawCommand + ':', fg='red')
 
                 output = caught.output.splitlines()
                 if len(output) == 0:
