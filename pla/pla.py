@@ -108,10 +108,17 @@ class TargetRunner:
                 click.secho(raw_command, fg='white', dim=True, nl=False)
                 subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
 
-                click.secho("\b" * len(raw_command), nl=False)
+                click.secho("\033[2K\r", nl=False)
+                for i in range(len(raw_command) / click.get_terminal_size()[0]):
+                    print "\b",
+                    click.secho("\033[2K\r", nl=False)
                 click.secho('    ' + u'\u2714'.encode('utf8') + ' ' + rawCommand, fg='green')
             except subprocess.CalledProcessError as caught:
-                click.secho("\b" * len(raw_command), nl=False)
+                click.secho("\033[2K\r", nl=False)
+                for i in range(len(raw_command) / click.get_terminal_size()[0]):
+                    print "\b",
+                    click.secho("\033[2K\r", nl=False)
+
                 click.secho('    ' + u'\u2718'.encode('utf8') + ' ' + rawCommand + ':', fg='red')
 
                 output = caught.output.splitlines()
