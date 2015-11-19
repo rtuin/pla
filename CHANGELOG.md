@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.3 - 19-11-2015
+- Enhancement: Auto-correcting some funky terminal behaviour
+
 ## 0.4.2 - 17-11-2015
 - Feature: Show the running command
 
