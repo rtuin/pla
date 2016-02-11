@@ -147,6 +147,31 @@ Running target "os":
 | Mac OS        | darwin  |
 | Windows       | windows |
 
+### Target descriptions
+
+Sometimes you want insight in which part of the Plafile is running. You can do this by giving targets descriptions.
+A description can be added in the form of a comment on the same line as the target definition, like so:
+
+```yaml
+targetname: # Echo sleep and echo
+  - echo "ohai"
+  - sleep 1
+  - echo "bar"
+```
+
+This will generate the following output:
+
+```
+$ pla targetname
+Pla master by Richard Tuin - Coder's simplest workflow automation tool.
+
+Running target "targetname":
+  Echo sleep and echo
+    ✔ echo "ohai"
+    ✔ sleep 1
+    ✔ echo "bar"
+```
+
 ## Changelog
 
 All notable changes are documented in the [changelog file](CHANGELOG.md).

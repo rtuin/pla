@@ -1,0 +1,34 @@
+new:
+  - sleep 1
+  - sleep 1; echo "foobar!"; exit 1
+  - sleep 3
+
+test: # Test the basic functionality of Pla
+  - echo "ohai"
+  - sleep 1
+  - echo "bar"
+  - =depwithoutdescription
+  - =pr
+  - =os
+  - =dep
+  - echo "foo"
+
+depwithoutdescription:
+  - echo "Still doing things"
+
+dep: # Verifying dependencies
+  - echo "I'm  a dependency"
+  - echo "funny shizzle"; exit 1
+  - echo "baz"
+
+pr[number,mail]: # Running a parametrized task
+  - echo %number%
+  - echo "Hello:"
+  - "echo \"Mail: %mail%\""
+  - echo "%number%"
+
+os: # Let's see if OS filters work correctly
+  - (darwin) echo "Mac OS"
+  - (redhat) echo "RedHat family"
+  - (ubuntu|darwin) echo "Ubuntu or Mac OS"
+  - (debian) echo "Debian"

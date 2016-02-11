@@ -39,19 +39,35 @@ def pla(context, target):
 
     stream = open(plafile, 'r')
     plaData = yaml.load(stream)
+    stream.seek(0)
+    plaFileContent = stream.read()
+    stream.close()
 
     if not isinstance(plaData, dict):
         raise click.UsageError('Plafile.yml does not contain any targets')
 
     plaTargets = {}
+    usingDescriptions = False
     for targetDef in plaData:
         targetLength = targetDef.find('[')
         targetName = targetDef
         targetArguments = []
+        description = None
+        for line in plaFileContent.split('\n'):
+            if line.startswith(targetName) and line.find('#') > len(targetName):
+                description = line[line.find('#')+1:].strip()
+                usingDescriptions = True
+
         if targetLength > 0:
             targetArguments = targetName[targetLength+1:-1].split(',')
             targetName = targetName[:targetLength]
-        plaTargets[targetName] = {'arguments': targetArguments, 'commands': plaData[targetDef]}
+
+        plaTargets[targetName] = {'description': description, 'arguments': targetArguments, 'commands': plaData[targetDef]}
+
+    if usingDescriptions:
+        for plaTarget in plaTargets:
+            if plaTargets[plaTarget]['description'] is None:
+                plaTargets[plaTarget]['description'] = plaTarget + ' (no description)'
 
     if not target in plaTargets:
         raise click.BadParameter(
@@ -79,14 +95,19 @@ class TargetRunner:
         :return:
         """
         targetArgs = {}
-        argNo = 0
+        argNo, cmdNo = 0, 0
         if len(self.plafile[target]['arguments']) > len(args):
             raise click.BadParameter('Not enough parameters given for target: ' + target)
+
+        if self.plafile[target]['description'] is not None:
+            click.secho('  ' + self.plafile[target]['description'], fg='white', dim=True)
 
         for argName in self.plafile[target]['arguments']:
             targetArgs[argName] = args[argNo]
             argNo += 1
+
         for rawCommand in self.plafile[target]['commands']:
+            cmdNo += 1
             command = command_for_current_os(rawCommand)
             if not command:
                 click.secho('    . ' + rawCommand, fg='white', dim=True)
@@ -97,6 +118,11 @@ class TargetRunner:
 
             if command[:1] == '=':
                 error = self.run(command[1:], args, error)
+                if (self.plafile[target]['description'] and
+                    cmdNo-1 < len(self.plafile[target]['commands']) and
+                    self.plafile[target]['commands'][cmdNo][:1] != '='
+                    ):
+                    click.secho('  ' + self.plafile[target]['description'] + ' (cont.)', fg='white', dim=True)
                 continue
 
             if error:
