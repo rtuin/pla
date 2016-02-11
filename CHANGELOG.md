@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.0 - 11-02-2016
+- Feature: Introduce target descriptions
+
 ## 0.4.3 - 19-11-2015
 - Enhancement: Auto-correcting some funky terminal behaviour
 
