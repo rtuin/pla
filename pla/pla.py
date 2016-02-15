@@ -119,7 +119,7 @@ class TargetRunner:
             if command[:1] == '=':
                 error = self.run(command[1:], args, error)
                 if (self.plafile[target]['description'] and
-                    cmdNo-1 < len(self.plafile[target]['commands']) and
+                    cmdNo < len(self.plafile[target]['commands']) and
                     self.plafile[target]['commands'][cmdNo][:1] != '='
                     ):
                     click.secho('  ' + self.plafile[target]['description'] + ' (cont.)', fg='white', dim=True)

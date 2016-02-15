@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.1 - 15-02-2016
+- Bugfix: list index out of range when using descriptions
+
 ## 0.5.0 - 11-02-2016
 - Feature: Introduce target descriptions
 
