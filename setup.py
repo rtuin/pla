@@ -23,7 +23,7 @@
 from distutils.core import setup
 from setuptools import find_packages
 
-exec(open('pla/version.py').read())
+exec (open('pla/version.py').read())
 
 setup(
     name='pla',

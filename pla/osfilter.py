@@ -1,11 +1,14 @@
-import platform, re
+import platform
+import re
+
+
 def command_for_current_os(command):
-    commandMatch = re.search("\(([^\)]*)\)\s(.*)", command)
-    if commandMatch == None:
+    command_match = re.search("\(([^\)]*)\)\s(.*)", command)
+    if command_match is None:
         return command
 
-    osMatch = re.search(commandMatch.group(1), platform.platform(), re.IGNORECASE)
-    if osMatch is None:
+    os_match = re.search(command_match.group(1), platform.platform(), re.IGNORECASE)
+    if os_match is None:
         return False
 
-    return commandMatch.group(2)
+    return command_match.group(2)
