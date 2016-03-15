@@ -24,6 +24,7 @@ import yaml
 import os
 import click
 import subprocess
+import platform
 from .version import __version__
 from .osfilter import command_for_current_os
 
@@ -115,7 +116,7 @@ class TargetRunner:
 
         for raw_command in self.pla_targets[target]['commands']:
             cmd_no += 1
-            command = command_for_current_os(raw_command)
+            command = command_for_current_os(raw_command, platform.platform())
             if not command:
                 click.secho('    . ' + raw_command, fg='white', dim=True)
                 continue

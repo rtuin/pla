@@ -20,16 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import platform
 import re
 
 
-def command_for_current_os(command):
+def command_for_current_os(command, current_platform):
     command_match = re.search("\(([^\)]*)\)\s(.*)", command)
     if command_match is None:
         return command
 
-    os_match = re.search(command_match.group(1), platform.platform(), re.IGNORECASE)
+    os_match = re.search(command_match.group(1), current_platform, re.IGNORECASE)
     if os_match is None:
         return False
 
