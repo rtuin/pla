@@ -4,6 +4,8 @@ Pla helps you automate workflows in a very simple way. Much like make, but with 
 
 It's a coder's simplest workflow automation tool.
 
+[![Build Status](https://travis-ci.org/rtuin/pla.svg?branch=master)](https://travis-ci.org/rtuin/pla)
+
 ## Install
 
 Pla requires Python 2.x. 
