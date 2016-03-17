@@ -1,0 +1,2 @@
+test:
+  - echo $(pwd); exit 1

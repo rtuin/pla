@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0 - 17-03-2016
+- Feature: Execute pla from a project's child directory
+- Enhancement: Refactored and reformatted code to be PEP8 compatible
+- Enhancement: Added unit-tests for some parts to increase reliability
+
 ## 0.5.1 - 15-02-2016
 - Bugfix: list index out of range when using descriptions
 

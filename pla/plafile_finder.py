@@ -20,27 +20,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from distutils.core import setup
-from setuptools import find_packages
+import os
 
-exec (open('pla/version.py').read())
 
-setup(
-    name='pla',
-    version=__version__,
-    description='Coder\'s simplest workflow automation tool.',
-    author='Richard Tuin',
-    author_email='richard@newnative.nl',
-    url='http://rtuin.github.io/pla/',
-    license='MIT',
-    packages=find_packages(),
-    install_requires=[
-        'Click',
-        'pyyaml'
-    ],
-    entry_points={
-        'console_scripts': [
-            'pla=pla:main'
-        ]
-    },
-)
+def find_pla_file(working_directory, filename):
+    basepath = os.path.abspath(working_directory)
+    plafile = basepath + '/' + filename
+
+    if basepath == '/':
+        return False
+
+    if not os.path.exists(plafile):
+        return find_pla_file(os.path.dirname(working_directory), filename)
+
+    return plafile
