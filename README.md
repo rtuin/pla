@@ -73,6 +73,50 @@ $ pla dev
 
 Pla will then run the shell commands you specified in the Plafile.
 
+### About the current working directory
+
+Pla will use the directory of the Plafile as its current working directory. As of v0.6 Pla looks for the
+Plafile.yml in the parent directory if there is none in the directory that you're running Pla from.
+
+For example, let's say this is your project file structure:
+```
+your-project/
+├── Plafile.yml
+└── subdirectory
+    └── somefile
+```
+
+And this is your Plafile.yml:
+
+```yaml
+test:
+  - echo $(pwd); exit 1
+```
+
+When you run Pla from the project root (where the Plafile.yml is), you will see this:
+
+```
+rtuin at localhost in ~/your-project
+$ pla test
+Pla master by Richard Tuin - Coder's simplest workflow automation tool.
+
+Running target "test":
+    ✘ echo $(pwd); exit 1:
+        /Users/rtuin/projects/your-project
+```
+
+And when you run Pla from the subdirectory, you will see this:
+
+```
+rtuin at localhost in ~/your-project/subdirectory
+$ pla test
+Pla master by Richard Tuin - Coder's simplest workflow automation tool.
+
+Running target "test":
+    ✘ echo $(pwd); exit 1:
+        /Users/rtuin/projects/your-project
+```
+
 ## Features
 
 ### Linking targets

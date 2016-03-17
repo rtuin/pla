@@ -27,6 +27,7 @@ import subprocess
 import platform
 from .version import __version__
 from .osfilter import command_for_current_os
+from plafile_finder import find_pla_file
 
 plafile = 'Plafile.yml'
 
@@ -37,10 +38,12 @@ plafile = 'Plafile.yml'
 def pla(context, target):
     click.echo(click.style('Pla ' + __version__ + ' by Richard Tuin - Coder\'s simplest workflow automation tool.'))
 
-    if not os.path.exists(plafile):
-        raise click.UsageError('Pla could not find a Plafile.yml in ' + os.getcwd())
+    pla_file_path = find_pla_file(os.getcwd(), plafile)
+    if not pla_file_path:
+        raise click.UsageError(
+            'Pla could not find a Plafile.yml in ' + os.getcwd() + ' or one of its parent directories')
 
-    stream = open(plafile, 'r')
+    stream = open(pla_file_path, 'r')
     pla_data = yaml.load(stream)
     stream.seek(0)
     pla_file_content = stream.read()
@@ -84,7 +87,7 @@ def pla(context, target):
     click.echo('\nRunning target "' + target + '":')
 
     target_runner = TargetRunner(pla_targets)
-    run_result = target_runner.run(target, context.args)
+    run_result = target_runner.run(os.path.dirname(pla_file_path), target, context.args)
 
     if run_result:
         context.exit(1)
@@ -94,9 +97,10 @@ class TargetRunner:
     def __init__(self, pla_targets):
         self.pla_targets = pla_targets
 
-    def run(self, target, args, error=False):
+    def run(self, cwd, target, args, error=False):
         """
 
+        :param cwd: string
         :param target: string
         :param args: dict
         :param error:
@@ -114,18 +118,18 @@ class TargetRunner:
             target_args[arg_name] = args[arg_no]
             arg_no += 1
 
-        for raw_command in self.pla_targets[target]['commands']:
+        for original_command in self.pla_targets[target]['commands']:
             cmd_no += 1
-            command = command_for_current_os(raw_command, platform.platform())
+            command = command_for_current_os(original_command, platform.platform())
             if not command:
-                click.secho('    . ' + raw_command, fg='white', dim=True)
+                click.secho('    . ' + original_command, fg='white', dim=True)
                 continue
 
             for arg_name, argValue in target_args.iteritems():
                 command = command.replace("%" + arg_name + "%", argValue)
 
             if command[:1] == '=':
-                error = self.run(command[1:], args, error)
+                error = self.run(cwd, command[1:], args, error)
                 if (self.pla_targets[target]['description'] and
                         cmd_no < len(self.pla_targets[target]['commands']) and
                         self.pla_targets[target]['commands'][cmd_no][:1] != '='):
@@ -133,26 +137,26 @@ class TargetRunner:
                 continue
 
             if error:
-                click.secho('    . ' + raw_command, fg='white', dim=True)
+                click.secho('    . ' + original_command, fg='white', dim=True)
                 continue
 
-            raw_command = '    ' + u'\u231B'.encode('utf8') + ' ' + raw_command
+            hourglass_command = '    ' + u'\u231B'.encode('utf8') + ' ' + original_command
             try:
-                click.secho(raw_command, fg='white', dim=True, nl=False)
-                subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+                click.secho(hourglass_command, fg='white', dim=True, nl=False)
+                subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, cwd=cwd)
 
                 click.secho("\033[2K\r", nl=False)
-                for i in range(len(raw_command) / click.get_terminal_size()[0]):
+                for i in range(len(hourglass_command) / click.get_terminal_size()[0]):
                     print "\b",
                     click.secho("\033[2K\r", nl=False)
-                click.secho('    ' + u'\u2714'.encode('utf8') + ' ' + raw_command, fg='green')
+                click.secho('    ' + u'\u2714'.encode('utf8') + ' ' + original_command, fg='green')
             except subprocess.CalledProcessError as caught:
                 click.secho("\033[2K\r", nl=False)
-                for i in range(len(raw_command) / click.get_terminal_size()[0]):
+                for i in range(len(hourglass_command) / click.get_terminal_size()[0]):
                     print "\b",
                     click.secho("\033[2K\r", nl=False)
 
-                click.secho('    ' + u'\u2718'.encode('utf8') + ' ' + raw_command + ':', fg='red')
+                click.secho('    ' + u'\u2718'.encode('utf8') + ' ' + original_command + ':', fg='red')
 
                 output = caught.output.splitlines()
                 if len(output) == 0:
