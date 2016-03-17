@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.1 - 17-03-2016
+- Bugfix: Function was resolved incorrectly
+
 ## 0.6.0 - 17-03-2016
 - Feature: Execute pla from a project's child directory
 - Enhancement: Refactored and reformatted code to be PEP8 compatible
