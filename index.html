@@ -26,12 +26,40 @@
 
 <p>It's a coder's simplest workflow automation tool.</p>
 
+<p><a href="https://travis-ci.org/rtuin/pla"><img src="https://travis-ci.org/rtuin/pla.svg?branch=master" alt="Build Status"></a></p>
+
 <h2>
 <a id="install" class="anchor" href="#install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install</h2>
 
-<p>Use the pip installer to install Pla</p>
+<p>Pla requires Python 2.x. 
+Use the pip installer to install Pla.</p>
 
-<div class="highlight highlight-source-shell"><pre>$ pip install pla</pre></div>
+<div class="highlight highlight-source-shell"><pre>$ (sudo) pip install pla</pre></div>
+
+<p>If pip is not present on your system:</p>
+
+<pre><code>$ sudo easy_install pip
+</code></pre>
+
+<p><em><strong>Note:</strong> OS X Users reported that <a href="http://brew.sh/">Homebrew</a>'s version of Python works better than the stock one.</em></p>
+
+<h3>
+<a id="upgrade-an-existing-installation" class="anchor" href="#upgrade-an-existing-installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Upgrade an existing installation</h3>
+
+<p>When installed with Pip you can upgrade to the latest version using:</p>
+
+<div class="highlight highlight-source-shell"><pre>$ (sudo) pip install pla --upgrade</pre></div>
+
+<h3>
+<a id="install-from-git" class="anchor" href="#install-from-git" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install from git</h3>
+
+<p>To install Pla from git you first need to make sure Pla is uninstalled. Then you must clone the repository and install 
+the development version:</p>
+
+<div class="highlight highlight-source-shell"><pre>$ pip uninstall pla
+$ git clone git@github.com:rtuin/pla.git
+$ <span class="pl-c1">cd</span> pla
+$ pip install -e <span class="pl-c1">.</span></pre></div>
 
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
@@ -63,10 +91,54 @@ and run the targets from the command line.</p>
 
 <p>Pla will then run the shell commands you specified in the Plafile.</p>
 
-<h2>
-<a id="linking-targets" class="anchor" href="#linking-targets" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Linking targets</h2>
+<h3>
+<a id="about-the-current-working-directory" class="anchor" href="#about-the-current-working-directory" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>About the current working directory</h3>
 
-<p>As of Pla v0.2 it is also possible to let your targets call each other. This is simply done by refering to the target 
+<p>Pla will use the directory of the Plafile as its current working directory. As of v0.6 Pla looks for the
+Plafile.yml in the parent directory if there is none in the directory that you're running Pla from.</p>
+
+<p>For example, let's say this is your project file structure:</p>
+
+<pre><code>your-project/
+├── Plafile.yml
+└── subdirectory
+    └── somefile
+</code></pre>
+
+<p>And this is your Plafile.yml:</p>
+
+<div class="highlight highlight-source-yaml"><pre><span class="pl-s"><span class="pl-ent">test:</span></span>
+  <span class="pl-s">- <span class="pl-s">echo $(pwd); exit 1</span></span></pre></div>
+
+<p>When you run Pla from the project root (where the Plafile.yml is), you will see this:</p>
+
+<pre><code>rtuin at localhost in ~/your-project
+$ pla test
+Pla master by Richard Tuin - Coder's simplest workflow automation tool.
+
+Running target "test":
+    ✘ echo $(pwd); exit 1:
+        /Users/rtuin/projects/your-project
+</code></pre>
+
+<p>And when you run Pla from the subdirectory, you will see this:</p>
+
+<pre><code>rtuin at localhost in ~/your-project/subdirectory
+$ pla test
+Pla master by Richard Tuin - Coder's simplest workflow automation tool.
+
+Running target "test":
+    ✘ echo $(pwd); exit 1:
+        /Users/rtuin/projects/your-project
+</code></pre>
+
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h2>
+
+<h3>
+<a id="linking-targets" class="anchor" href="#linking-targets" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Linking targets</h3>
+
+<p>As of Pla v0.2 it is possible to let your targets call each other. This is simply done by refering to the target 
 prepended with an <code>=</code> sign. Like so:</p>
 
 <div class="highlight highlight-source-yaml"><pre><span class="pl-c"># Plafile.yml</span>
@@ -80,8 +152,8 @@ prepended with an <code>=</code> sign. Like so:</p>
   <span class="pl-s">- <span class="pl-s">git submodule update --init --recursive</span></span>
   <span class="pl-s">- <span class="pl-s">composer install</span></span></pre></div>
 
-<h2>
-<a id="target-parameters" class="anchor" href="#target-parameters" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Target parameters</h2>
+<h3>
+<a id="target-parameters" class="anchor" href="#target-parameters" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Target parameters</h3>
 
 <p>Pla v0.3 gives you the ability to variables in target commands. This feature is called target parameters.</p>
 
@@ -99,6 +171,89 @@ prepended with an <code>=</code> sign. Like so:</p>
 
 <p><strong>Disclaimer</strong> The current implementation of target parameters is built to work only when you directly call the
   parametrized target.</p>
+
+<h3>
+<a id="command-os-filter" class="anchor" href="#command-os-filter" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Command OS filter</h3>
+
+<p>When you run the same Pla target on multiple operating systems you might want to specify which command to execute on what OS.
+You can do this by prefixing your command with a filter that indicates the OS's family name.</p>
+
+<div class="highlight highlight-source-yaml"><pre><span class="pl-c"># Plafile</span>
+<span class="pl-s"><span class="pl-ent">os:</span></span>
+  <span class="pl-s">- <span class="pl-s">(darwin) echo "Mac OS"</span></span>
+  <span class="pl-s">- <span class="pl-s">(redhat) echo "RedHat family"</span></span>
+  <span class="pl-s">- <span class="pl-s">(ubuntu|darwin) echo "Ubuntu or Mac OS"</span></span>
+  <span class="pl-s">- <span class="pl-s">(debian) echo "Debian"</span></span></pre></div>
+
+<p>If you run <code>pla os</code> on a Mac, you'll get the following output:</p>
+
+<pre><code>Running target "os":
+    ✔ (darwin) echo "Mac OS"
+    . (redhat) echo "RedHat family"
+    ✔ (ubuntu|darwin) echo "Ubuntu or Mac OS"
+    . (debian) echo "Debian"
+</code></pre>
+
+<p><strong>Operating systems matches</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>System/Family</th>
+<th>Match</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux</td>
+<td>linux</td>
+</tr>
+<tr>
+<td>Ubuntu</td>
+<td>ubuntu</td>
+</tr>
+<tr>
+<td>Red Hat</td>
+<td>redhat</td>
+</tr>
+<tr>
+<td>Mac OS</td>
+<td>darwin</td>
+</tr>
+<tr>
+<td>Windows</td>
+<td>windows</td>
+</tr>
+</tbody>
+</table>
+
+<h3>
+<a id="target-descriptions" class="anchor" href="#target-descriptions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Target descriptions</h3>
+
+<p>Sometimes you want insight in which part of the Plafile is running. You can do this by giving targets descriptions.
+A description can be added in the form of a comment on the same line as the target definition, like so:</p>
+
+<div class="highlight highlight-source-yaml"><pre><span class="pl-s"><span class="pl-ent">targetname:</span> </span><span class="pl-c"># Echo sleep and echo</span>
+  <span class="pl-s">- <span class="pl-s">echo "ohai"</span></span>
+  <span class="pl-s">- <span class="pl-s">sleep 1</span></span>
+  <span class="pl-s">- <span class="pl-s">echo "bar"</span></span></pre></div>
+
+<p>This will generate the following output:</p>
+
+<pre><code>$ pla targetname
+Pla master by Richard Tuin - Coder's simplest workflow automation tool.
+
+Running target "targetname":
+  Echo sleep and echo
+    ✔ echo "ohai"
+    ✔ sleep 1
+    ✔ echo "bar"
+</code></pre>
+
+<h2>
+<a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Changelog</h2>
+
+<p>All notable changes are documented in the <a href="CHANGELOG.md">changelog file</a>.</p>
 
 <h2>
 <a id="credits" class="anchor" href="#credits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Credits</h2>
