@@ -26,8 +26,8 @@ import click
 import subprocess
 import platform
 from .version import __version__
-from osfilter import command_for_current_os
-from plafile_finder import find_pla_file
+from .osfilter import command_for_current_os
+from .plafile_finder import find_pla_file
 
 plafile = 'Plafile.yml'
 
