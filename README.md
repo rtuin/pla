@@ -220,13 +220,13 @@ Running target "targetname":
 
 ## Changelog
 
-All notable changes are documented in the [changelog file](CHANGELOG.md).
+All notable changes are documented in the [changelog file](https://github.com/rtuin/pla/blob/master/CHANGELOG.md).
 
 ## Credits
 
 - [Richard Tuin](https://github.com/rtuin)
-- [All Contributors](../../contributors)
+- [All Contributors](https://github.com/rtuin/pla/contributors)
 
 ## License
 
-The MIT License (MIT). Please see the [license file](LICENSE) for more information.
+The MIT License (MIT). Please see the [license file](https://github.com/rtuin/pla/blob/master/LICENSE) for more information.
