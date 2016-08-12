@@ -137,10 +137,10 @@ class TargetRunner:
                 continue
 
             if error:
-                click.secho('    . ' + original_command, fg='white', dim=True)
+                click.secho('    . ' + command, fg='white', dim=True)
                 continue
 
-            hourglass_command = '    ' + u'\u231B'.encode('utf8') + ' ' + original_command
+            hourglass_command = '    ' + u'\u231B'.encode('utf8') + ' ' + command
             try:
                 click.secho(hourglass_command, fg='white', dim=True, nl=False)
                 subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, cwd=cwd)
@@ -149,14 +149,14 @@ class TargetRunner:
                 for i in range(len(hourglass_command) / click.get_terminal_size()[0]):
                     print "\b",
                     click.secho("\033[2K\r", nl=False)
-                click.secho('    ' + u'\u2714'.encode('utf8') + ' ' + original_command, fg='green')
+                click.secho('    ' + u'\u2714'.encode('utf8') + ' ' + command, fg='green')
             except subprocess.CalledProcessError as caught:
                 click.secho("\033[2K\r", nl=False)
                 for i in range(len(hourglass_command) / click.get_terminal_size()[0]):
                     print "\b",
                     click.secho("\033[2K\r", nl=False)
 
-                click.secho('    ' + u'\u2718'.encode('utf8') + ' ' + original_command + ':', fg='red')
+                click.secho('    ' + u'\u2718'.encode('utf8') + ' ' + command + ':', fg='red')
 
                 output = caught.output.splitlines()
                 if len(output) == 0:
