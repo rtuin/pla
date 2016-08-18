@@ -1,7 +1,3 @@
-# Editors
-.idea/
-
-# Pla specific
 build/
 dist/
 pla.egg-info/
